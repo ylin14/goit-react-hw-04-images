@@ -1,3 +1,4 @@
+import { useEffect, useState, useCallback  } from 'react';
 import Loader from '../../shared/components/Loader';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
@@ -7,7 +8,7 @@ import { fetch } from '../../shared/api/pixabay';
 
 import s from './imgFinder.module.css';
 
-import { useEffect, useState } from 'react';
+
 
 function ImgFinder () {
   const [state, setState] = useState({
@@ -49,34 +50,37 @@ useEffect(() => {
     }
   }
 
-fetchImg()
-}, [query, pagination.page])
+  fetchImg()
+}, [query, pagination.page, pagination, state])
 
-const setImages = ( q ) => {
+const setImages = useCallback (( q ) => {
     setQuery(q);
     setPagination({ ...pagination, page: 1 })
     setState({
+      ...state,
       images: [],
+
     });
-  };
+  }, [state, setState, pagination, setPagination]);
 
-const loadMore = () => {
+const loadMore = useCallback(() => {
   setPagination({...pagination, page: pagination.page + 1});
-};
+}, [pagination,setPagination]);
 
-const showModal = modalImg => {
+const showModal =useCallback( modalImg => {
   setModal({
     isModalOpen: true,
     modalImg,
   });
-};
+}, [setModal]);
 
-const closeModal = () => {
+const closeModal =useCallback(  () => {
   setModal({
     isModalOpen: false,
     modalImg: {}
   });
-};
+}, [setModal])
+
 
   const {images, isLoading, error} = state;
   const {totalPages, page} = pagination;

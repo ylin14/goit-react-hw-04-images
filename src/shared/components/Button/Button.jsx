@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
 import s from './button.module.css';
+import { memo } from 'react';
 
 function Button({ text, onClick }) {
   return (
@@ -15,4 +16,4 @@ Button.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-export default Button;
+export default memo (Button);
