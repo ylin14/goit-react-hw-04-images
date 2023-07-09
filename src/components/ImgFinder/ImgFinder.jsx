@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback  } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Loader from '../../shared/components/Loader';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
@@ -37,21 +37,19 @@ useEffect(() => {
 
     try {
       const { totalHits, hits } = await fetch(query, pagination.page);
-
-      setState({
-        ...state,
-        images: [...state.images, ...hits],
-        isLoading: false
-      });
-
+      setState(prevState => ({
+          ...prevState,
+          images: [...prevState.images, ...hits],
+          isLoading: false
+      }));
       setPagination({...pagination, totalPages: totalHits/12})
     } catch (error) {
       setState({...state, error: error.message, isLoading: false});
     }
   }
-
   fetchImg()
-}, [query, pagination.page, pagination, state])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [query, pagination.page])
 
 const setImages = useCallback (( q ) => {
     setQuery(q);
@@ -92,6 +90,7 @@ return(
     {images.length > 0 && (
       <ImageGallery items={images} onClick={showModal} />
     )}
+    {/*{!images.length && !isLoading && !error && <p>Looking like universe do not want response to you by that request)</p>}*/}
     {isLoading && <Loader />}
     {error && <p>Something went wrong: {error}</p>}
     {totalPages > page && !isLoading && images.length > 0 && (
